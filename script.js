@@ -113,18 +113,20 @@ function filterItems(e) {
   });
 }
 
-function getFromStorage() {
-  const items = JSON.parse(localStorage.getItem('items'));
-  if (items && items.length) {
-    items.forEach((item) => addItemToDOM(item));
-  }
+function displayItems() {
+  const items = getItemsFromStorage();
+  items.forEach((item) => addItemToDOM(item));
 }
 
 // Event Listeners
-itemForm.addEventListener('submit', addItem);
-itemList.addEventListener('click', removeItem);
-clearAllBtn.addEventListener('click', clearAllItems);
-filterInput.addEventListener('input', filterItems);
+function init() {
+  itemForm.addEventListener('submit', addItem);
+  itemList.addEventListener('click', removeItem);
+  clearAllBtn.addEventListener('click', clearAllItems);
+  filterInput.addEventListener('input', filterItems);
+  document.addEventListener('DOMContentLoaded', displayItems);
 
-checkUI();
-getFromStorage();
+  checkUI();
+}
+
+init();
