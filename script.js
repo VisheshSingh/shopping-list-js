@@ -4,6 +4,8 @@ const itemList = document.getElementById('item-list');
 const clearAllBtn = document.getElementById('clear');
 const filterElement = document.querySelector('.filter');
 const filterInput = document.getElementById('filter');
+const formButton = document.querySelector('.btn');
+let isEditMode = false;
 
 function saveToStorage(item) {
   let itemStorage = getItemsFromStorage();
@@ -30,6 +32,10 @@ function addItem(e) {
   if (newItem === '') {
     alert('Please add an item!');
     return;
+  }
+
+  if (isEditMode) {
+    isEditMode = false;
   }
 
   addItemToDOM(newItem);
@@ -70,7 +76,19 @@ function clickItem(e) {
   if (e.target.classList.contains('fa-xmark')) {
     removeItem(e.target.parentElement.parentElement);
   } else {
+    setItemToEdit(e.target);
   }
+}
+
+function setItemToEdit(item) {
+  document
+    .querySelectorAll('li')
+    .forEach((item) => item.classList.remove('edit-mode'));
+  isEditMode = true;
+  itemInput.value = item.textContent;
+  item.classList.add('edit-mode');
+  formButton.style.backgroundColor = 'green';
+  formButton.innerHTML = `<i class="fa-solid fa-pen"></i> Update Item`;
 }
 
 function removeItem(listItem) {
