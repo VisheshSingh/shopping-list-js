@@ -5,11 +5,22 @@ const clearAllBtn = document.getElementById('clear');
 const filterElement = document.querySelector('.filter');
 const filterInput = document.getElementById('filter');
 
-function saveToStorage() {
-  const li = document.querySelectorAll('li');
-  const items = [];
-  li.forEach((item) => items.push(item.firstChild.textContent));
-  localStorage.setItem('items', JSON.stringify(items));
+function saveToStorage(item) {
+  let itemStorage = getItemsFromStorage();
+
+  itemStorage.push(item);
+  // add items to localStorage
+  localStorage.setItem('items', JSON.stringify(itemStorage));
+}
+
+function getItemsFromStorage() {
+  let itemStorage;
+  if (localStorage.getItem('items') === null) {
+    itemStorage = [];
+  } else {
+    itemStorage = JSON.parse(localStorage.getItem('items'));
+  }
+  return itemStorage;
 }
 
 function addItem(e) {
@@ -22,8 +33,7 @@ function addItem(e) {
   }
 
   addItemToDOM(newItem);
-
-  saveToStorage();
+  saveToStorage(newItem);
   itemInput.value = '';
 }
 
