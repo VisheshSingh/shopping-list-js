@@ -82,10 +82,10 @@ function createIcon(classes) {
   return icon;
 }
 
-function clickItem(e) {
+function onClickItem(e) {
   if (e.target.classList.contains('fa-xmark')) {
     removeItem(e.target.parentElement.parentElement);
-  } else {
+  } else if (e.target.tagName === 'LI') {
     setItemToEdit(e.target);
   }
 }
@@ -162,7 +162,7 @@ function displayItems() {
 // Event Listeners
 function init() {
   itemForm.addEventListener('submit', addItem);
-  itemList.addEventListener('click', clickItem);
+  itemList.addEventListener('click', onClickItem);
   clearAllBtn.addEventListener('click', clearAllItems);
   filterInput.addEventListener('input', filterItems);
   document.addEventListener('DOMContentLoaded', displayItems);
