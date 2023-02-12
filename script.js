@@ -5,6 +5,13 @@ const clearAllBtn = document.getElementById('clear');
 const filterElement = document.querySelector('.filter');
 const filterInput = document.getElementById('filter');
 
+function saveToStorage() {
+  const li = document.querySelectorAll('li');
+  const items = [];
+  li.forEach((item) => items.push(item.firstChild.textContent));
+  localStorage.setItem('items', JSON.stringify(items));
+}
+
 function addItem(e) {
   e.preventDefault();
   const newItem = itemInput.value;
@@ -14,12 +21,18 @@ function addItem(e) {
     return;
   }
 
-  const listItem = createListItem(newItem);
+  addItemToDOM(newItem);
+
+  saveToStorage();
+  itemInput.value = '';
+}
+
+function addItemToDOM(item) {
+  const listItem = createListItem(item);
   const button = createButton('remove-item btn-link text-red');
   listItem.appendChild(button);
   itemList.appendChild(listItem);
   checkUI();
-  itemInput.value = '';
 }
 
 function createListItem(newItem) {
@@ -48,6 +61,11 @@ function removeItem(e) {
     const listItem = e.target.closest('li');
     // listItem.remove();
     itemList.removeChild(listItem);
+    const items = JSON.parse(localStorage.getItem('items'));
+    const remainingItems = items.filter(
+      (item) => item !== listItem.firstChild.textContent
+    );
+    localStorage.setItem('items', JSON.stringify([...remainingItems]));
     checkUI();
   }
 }
@@ -57,6 +75,7 @@ function clearAllItems() {
   while (itemList.firstElementChild) {
     itemList.removeChild(itemList.firstElementChild);
   }
+  localStorage.removeItem('items');
   checkUI();
 }
 
@@ -84,6 +103,13 @@ function filterItems(e) {
   });
 }
 
+function getFromStorage() {
+  const items = JSON.parse(localStorage.getItem('items'));
+  if (items && items.length) {
+    items.forEach((item) => addItemToDOM(item));
+  }
+}
+
 // Event Listeners
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
@@ -91,3 +117,4 @@ clearAllBtn.addEventListener('click', clearAllItems);
 filterInput.addEventListener('input', filterItems);
 
 checkUI();
+getFromStorage();
