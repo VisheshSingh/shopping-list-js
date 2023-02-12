@@ -66,18 +66,23 @@ function createIcon(classes) {
   return icon;
 }
 
-function removeItem(e) {
+function clickItem(e) {
   if (e.target.classList.contains('fa-xmark')) {
-    const listItem = e.target.closest('li');
-    // listItem.remove();
-    itemList.removeChild(listItem);
-    const items = JSON.parse(localStorage.getItem('items'));
-    const remainingItems = items.filter(
-      (item) => item !== listItem.firstChild.textContent
-    );
-    localStorage.setItem('items', JSON.stringify([...remainingItems]));
-    checkUI();
+    removeItem(e.target.parentElement.parentElement);
+  } else {
   }
+}
+
+function removeItem(listItem) {
+  listItem.remove();
+  removeItemFromStorage(listItem.textContent);
+}
+
+function removeItemFromStorage(listItem) {
+  const items = getItemsFromStorage();
+  const remainingItems = items.filter((item) => item !== listItem);
+  localStorage.setItem('items', JSON.stringify(remainingItems));
+  checkUI();
 }
 
 function clearAllItems() {
@@ -121,7 +126,7 @@ function displayItems() {
 // Event Listeners
 function init() {
   itemForm.addEventListener('submit', addItem);
-  itemList.addEventListener('click', removeItem);
+  itemList.addEventListener('click', clickItem);
   clearAllBtn.addEventListener('click', clearAllItems);
   filterInput.addEventListener('input', filterItems);
   document.addEventListener('DOMContentLoaded', displayItems);
